@@ -1,0 +1,60 @@
+<!doctype html><html lang="pl"><head><meta charset="utf-8"><title>QuickNMT — etap 6</title></head><body>
+<h1>QuickNMT 0.0.6 — duże obszary</h1>
+<p>Wybierz obszar, pobierz potrzebne arkusze i zapisz połączony, przycięty wynik w wybranym formacie.
+Wyniki NMT trafiają do grupy <b>NMT</b>. Istniejąca grupa jest używana ponownie.</p>
+<h2>Pobierz i połącz</h2>
+<ol><li>Wybierz dane, układ wysokościowy i rozdzielczość.</li>
+<li>Wskaż obszar z widoku QGIS, warstwy poligonowej albo mapy Geoportalu.</li>
+<li>Ustaw bufor i opcję zachowania go w wyniku.</li>
+<li>Wybierz format i wskaż plik. Kliknij <b>Pobierz i połącz</b>.</li></ol>
+<p>Wyszukiwanie obejmuje obszar z buforem i sąsiednie arkusze techniczne.
+Najpierw łączymy arkusze, następnie przycinamy do obszaru z buforem lub bez niego.
+Wynik zawiera plik w wybranym formacie i opis źródeł .quicknmt.json.</p>
+<p>Braki danych są pozostawiane jako NoData. Komunikat podaje pokrycie w komórkach maski.
+Otwory w poligonach i oddzielne części obszaru są zachowywane na siatce rastra.</p>
+<h2>Formaty</h2>
+<ul><li><b>GeoTIFF:</b> raster .tif z CRS i NoData.</li>
+<li><b>ASC:</b> raster tekstowy .asc oraz .prj z układem współrzędnych.</li>
+<li><b>XYZ:</b> X Y Z, spacje, bez nagłówka.</li>
+<li><b>TXT:</b> nagłówek X/Y/Z, tabulatory.</li></ul>
+<p>XYZ i TXT zapisują środki komórek, pomijają NoData, używają kropki dziesiętnej
+i UTF-8. Nie są automatycznie dodawane jako warstwy punktowe.
+TIF i ASC mogą być dodawane do grupy NMT/NMPT. Format wybiera się z listy,
+a rozszerzenie zostaje dopasowane. Konwersja następuje po połączeniu i przycięciu.</p>
+<p>Od oszacowanych 5 mln komórek eksport tekstowy wymaga potwierdzenia rozmiaru.
+Luki i obszary poza maską zmniejszają faktyczny rozmiar. Anuluj przerywa również konwersję.</p>
+<h2>Mapa i bufor</h2>
+<p>Wybierz „Wybór na mapie Geoportalu” → „Wybierz obszar”. Podkład OpenStreetMap
+jest domyślnie włączony. Suwak zmienia widoczność kolorowego skorowidzu.</p>
+<ul><li><b>Arkusze:</b> kliknięcie wybiera/odznacza arkusz, przeciągnięcie lewym przyciskiem dodaje wiele arkuszy.</li>
+<li><b>Prostokąt:</b> rysuje sam obszar.</li><li><b>Poligon:</b> klikaj punkty; Enter lub prawy przycisk kończy, Backspace cofa.</li>
+<li><b>Przesuwanie:</b> nawigacja; kółko i +/− zmieniają skalę.</li></ul>
+<p>Duże obszary są automatycznie dzielone na mniejsze zapytania skorowidzu. Limit jednego zadania: 2500 wybranych arkuszy źródłowych.</p>
+<p>Bufor automatyczny: max(10 m, 5 × rozdzielczość), ręczny: 0–500 m.
+„Sprawdź obszar” pokazuje AOI na zielono, a bufor na pomarańczowo.</p>
+<h2>Układy i rozdzielczości</h2>
+<p>QuickNMT dobiera źródła w wybranym układzie wysokościowym, <b>nie przelicza wysokości Z</b>.
+Zgodne siatki są łączone bez resamplingu. Zachowywany jest źródłowy CRS poziomy.</p>
+<p>Różne CRS wymagają potwierdzenia transformacji poziomej do EPSG:2180.
+Przesunięte siatki także wymagają decyzji. Stosowany jest najbliższy sąsiad,
+a zmiana siatki jest zapisywana w opisie.</p>
+<p>Jeżeli źródła mają różne rozdzielczości, wybierz wielkość piksela wyniku
+(np. 0,5 m lub 1 m) i kliknij <b>Zastosuj i połącz</b>. <b>Anuluj</b> zatrzyma zadanie
+i usunie pliki robocze. Zgodne siatki nie wymagają tej decyzji.</p>
+<p>NMPT automatyczny dobiera dostępne źródła 0,5/1 m, z pierwszeństwem nowszych danych.
+Opcje produktu źródłowego 0,5 m oraz 1 m pobierają wyłącznie wskazaną rozdzielczość.
+Piksel wyniku 0,5 m nie zwiększa szczegółowości danych źródłowych 1 m. Piksel 1 m może
+pominąć szczegóły źródła 0,5 m. JSON rozróżnia rozdzielczości źródeł i wyniku oraz
+zapisuje zastosowanie najbliższego sąsiada. Braki pozostają jako NoData.
+NMPT trafia do grupy <b>NMPT</b>, NMT do grupy <b>NMT</b>.</p>
+<h2>Anulowanie i zapis</h2>
+<p>Podczas pracy główny przycisk zmienia się na <b>Anuluj</b>. Zamknięcie okna też przerywa pracę.
+Poprzedni wynik zostaje zachowany do zakończenia kontroli nowego. Nadpisanie wymaga potwierdzenia.
+Dla rastra już otwartego w projekcie wybierz nową nazwę.</p>
+<p>Pobieranie ma limit 180 s bezczynności i maksymalnie cztery próby. Przy czekaniu widać licznik.
+W razie błędu sprawdź Dziennik komunikatów → QuickNMT.</p>
+<h2>Cały plik źródłowy</h2>
+<p><b>Pojedynczy arkusz…</b> otwiera pomocniczą listę z etapu 3. Zapisuje jeden pełny
+oryginalny ASC/TIF, opis JSON i .prj dla ASC w nowym podfolderze. Nie przycina tego pliku.</p>
+<p>© OpenStreetMap contributors. Skorowidz i wysokości: GUGiK / PZGiK. Szczegóły: README.md.</p>
+</body></html>

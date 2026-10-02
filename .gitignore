@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# QGIS / IDE / OS
+.qgis/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Test and build artifacts
+.pytest_cache/
+build/
+dist/
+*.egg-info/
+
+# Release archives are published separately, not committed to source
+*.zip
+
+# Temporary / partial downloads
+*.part
+*.tmp
