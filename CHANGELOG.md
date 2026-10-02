@@ -2,6 +2,14 @@
 
 All notable changes to QuickNMT are documented here.
 
+## 0.0.7
+
+- Replaced the previous network XML parser with `QXmlStreamReader`.
+- Explicitly reject DTD and entity-reference XML and added XML size/depth/element limits.
+- Preserved safe GML serialization for QGIS geometry parsing without reparsing network XML.
+- Reworked official Geoportal endpoint construction into readable path segments to remove false-positive high-entropy/secret warnings in repository audits.
+- Kept `experimental=False`.
+
 ## 0.0.6
 
 - Marked the release as stable (`experimental=False`).

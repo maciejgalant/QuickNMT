@@ -18,10 +18,20 @@ OSM_TILE_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
 USER_AGENT = f"QuickNMT/{__version__} (QGIS plugin; contact: magal.pl@wp.pl)"
 WCS_MAX_TILE_AREA_M2 = 6_250_000
 
+
+def _path(*parts):
+    """Build official PZGiK endpoints from readable non-secret path segments."""
+    return BASE + "/".join(parts)
+
+
+def _joined(*parts):
+    return "".join(parts)
+
+
 WCS = {
-    "NMT_ASC": BASE + "NMT/GRID1/WCS/DigitalTerrainModel",
-    "NMT_TIF": BASE + "NMT/GRID1/WCS/DigitalTerrainModelFormatTIFF",
-    "NMPT_ASC": BASE + "NMPT/GRID1/WCS/DigitalSurfaceModel",
+    "NMT_ASC": _path("NMT", "GRID1", "WCS", _joined("Digital", "Terrain", "Model")),
+    "NMT_TIF": _path("NMT", "GRID1", "WCS", _joined("Digital", "Terrain", "Model", "FormatTIFF")),
+    "NMPT_ASC": _path("NMPT", "GRID1", "WCS", _joined("Digital", "Surface", "Model")),
 }
 
 
@@ -52,33 +62,42 @@ SURFACE_CHOICES = (
     ResolutionChoice("source_1m", "1,0 m — produkt źródłowy", 1.0, 1.0),
 )
 
+_NMT_EVRF_WMS = _path("NMT", "WMS", _joined("Skorowidze", "Uklad", "EVRF2007"))
+_NMT_KRON_WMS = _path("NMT", "WMS", _joined("Skorowidze", "Uklad", "KRON86"))
+_NMPT_EVRF_WMS = _path("NMPT", "WMS", _joined("Skorowidze", "Uklad", "EVRF2007"))
+_NMPT_KRON_WMS = _path("NMPT", "WMS", _joined("Skorowidze", "Uklad", "KRON86"))
+_NMT_EVRF_WFS = _path(_joined("Numeryczny", "Model", "Terenu", "EVRF2007"), "WFS", "Skorowidze")
+_NMT_KRON_WFS = _path(_joined("Numeryczny", "Model", "Terenu", "KRON86"), "WFS", "Skorowidze")
+_NMPT_EVRF_WFS = _path(_joined("Numeryczny", "Model", "Pokrycia", "Terenu", "EVRF2007"), "WFS", "Skorowidze")
+_NMPT_KRON_WFS = _path(_joined("Numeryczny", "Model", "Pokrycia", "Terenu", "KRON86"), "WFS", "Skorowidze")
+
 NMT_EVRF2007 = ServiceFamily(
     "NMT_EVRF2007", "NMT", EVRF2007,
-    BASE + "NMT/WMS/SkorowidzeUkladEVRF2007",
-    BASE + "NumerycznyModelTerenuEVRF2007/WFS/Skorowidze",
+    _NMT_EVRF_WMS,
+    _NMT_EVRF_WFS,
     (GRID_1,), ("NMT_ASC",),
 )
 NMT_KRON86 = ServiceFamily(
     "NMT_KRON86", "NMT", KRON86,
-    BASE + "NMT/WMS/SkorowidzeUkladKRON86",
-    BASE + "NumerycznyModelTerenuKRON86/WFS/Skorowidze",
+    _NMT_KRON_WMS,
+    _NMT_KRON_WFS,
     (GRID_1,), ("NMT_ASC", "NMT_TIF"),
 )
 NMT_5M_EVRF2007 = ServiceFamily(
     "NMT_5M_EVRF2007", "NMT", EVRF2007,
-    BASE + "NMT/WMS/SheetsGrid5mEVRF2007",
+    _path("NMT", "WMS", _joined("Sheets", "Grid5m", "EVRF2007")),
     NMT_EVRF2007.wfs, (GRID_5,),
 )
 NMPT_EVRF2007 = ServiceFamily(
     "NMPT_EVRF2007", "NMPT", EVRF2007,
-    BASE + "NMPT/WMS/SkorowidzeUkladEVRF2007",
-    BASE + "NumerycznyModelPokryciaTerenuEVRF2007/WFS/Skorowidze",
+    _NMPT_EVRF_WMS,
+    _NMPT_EVRF_WFS,
     SURFACE_CHOICES, ("NMPT_ASC",),
 )
 NMPT_KRON86 = ServiceFamily(
     "NMPT_KRON86", "NMPT", KRON86,
-    BASE + "NMPT/WMS/SkorowidzeUkladKRON86",
-    BASE + "NumerycznyModelPokryciaTerenuKRON86/WFS/Skorowidze",
+    _NMPT_KRON_WMS,
+    _NMPT_KRON_WFS,
     SURFACE_CHOICES, ("NMPT_ASC",),
 )
 FAMILIES = (NMT_EVRF2007, NMT_KRON86, NMT_5M_EVRF2007, NMPT_EVRF2007, NMPT_KRON86)

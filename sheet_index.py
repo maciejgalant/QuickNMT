@@ -3,13 +3,11 @@ SPDX-License-Identifier: GPL-3.0-or-later
 """
 import math
 import re
-import xml.etree.ElementTree as ET
-
 from qgis.PyQt.QtCore import QObject, pyqtSignal
 from qgis.core import Qgis, QgsGeometry, QgsOgcUtils, QgsPointXY, QgsMessageLog
 
 from .aoi import clean_polygon, geometry_from_wkb
-from .capabilities import parse_xml, local_name, year_from_name
+from .capabilities import parse_xml, local_name, year_from_name, xml_to_string
 from .models import SheetRecord
 from .network import request_bytes, service_url, validate_url
 
@@ -45,7 +43,6 @@ def parse_features(payload, family, choice, layer_name):
         raise ValueError("Geoportal nie zwrócił kolekcji arkuszy WFS.")
     records = []
     raw_count = 0
-    ET.register_namespace("gml", "http://www.opengis.net/gml")
     for member in root:
         if local_name(member.tag) != "member":
             continue
@@ -67,14 +64,10 @@ def parse_features(payload, family, choice, layer_name):
         srs_values = {e.get("srsName") for e in element.iter() if e.get("srsName")}
         if not srs_values or not srs_values.issubset({WFS_CRS, "EPSG:3857", "http://www.opengis.net/def/crs/EPSG/0/3857"}):
             raise ValueError("WFS zwrócił inny CRS niż żądany EPSG:3857; wybór przerwany.")
-        # QgsOgcUtils accepts the GML3 geometry syntax but (also in QGIS 4.2)
-        # expects the classic GML namespace. Normalize only the geometry
-        # namespace, preserving coordinate values and the verified srsName.
-        for node in element.iter():
-            node.tag = node.tag.replace("{http://www.opengis.net/gml/3.2}", "{http://www.opengis.net/gml}")
-            node.attrib = {key.replace("{http://www.opengis.net/gml/3.2}", "{http://www.opengis.net/gml}"): value
-                           for key, value in node.attrib.items()}
-        geometry = QgsOgcUtils.geometryFromGML(ET.tostring(element, encoding="unicode"))
+        # QgsOgcUtils accepts the GML geometry syntax but expects the classic
+        # GML namespace. Serialize the already validated subtree and normalize
+        # GML 3.2 to the classic namespace without reparsing untrusted XML.
+        geometry = QgsOgcUtils.geometryFromGML(xml_to_string(element, normalize_gml=True))
         geometry, _ = clean_polygon(geometry)
         url = validate_url(attributes.get("url_do_pobrania", ""))
         try:

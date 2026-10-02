@@ -2,7 +2,7 @@
 
 **QuickNMT** is a QGIS plugin for downloading, mosaicking and clipping Polish **NMT** (Digital Terrain Model) and **NMPT** (Digital Surface Model) data published through **PZGiK / Geoportal**.
 
-Current release: **0.0.6**  
+Current release: **0.0.7**  
 License: **GPL-3.0-or-later**  
 QGIS: **3.36+**, with `qgisMaximumVersion=4.99`
 

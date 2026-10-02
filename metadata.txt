@@ -2,7 +2,7 @@
 name=QuickNMT
 qgisMinimumVersion=3.36
 qgisMaximumVersion=4.99
-version=0.0.6
+version=0.0.7
 description=Download, mosaic and clip Polish NMT/NMPT elevation data from PZGiK with buffered AOI and reliable large-area processing.
 about=QuickNMT downloads official Polish NMT and NMPT elevation datasets from PZGiK/Geoportal, automatically finds the required source sheets, mosaics and clips them to a buffered area of interest, and exports GeoTIFF, ASC, XYZ or TXT. It supports PL-EVRF2007-NH and PL-KRON86-NH source products without vertical-datum transformation. Large areas are split into smaller WFS queries to improve reliability and prevent request timeouts.
 author=Maciej Galant
@@ -18,4 +18,4 @@ tracker=https://github.com/maciejgalant/QuickNMT/issues
 icon=icons/quicknmt_icon.png
 hasProcessingProvider=False
 server=False
-changelog=0.0.6 - Stable large-area processing: buffered AOI queries are split into smaller WFS tiles, sheet results are deduplicated, WFS idle timeout is 180 s, source downloads allow up to 600 s of inactivity and 6 attempts, the final-raster safety limit is 1 billion cells, and large mosaics use a working directory next to the destination file. 0.0.5 - Mixed-resolution handling, NMPT 0.5/1 m support and source-product validation.
+changelog=0.0.7 - Security hardening for QGIS repository review: untrusted service XML is parsed with QXmlStreamReader with DTD/entity rejection and resource limits; service URLs are assembled from readable path segments to avoid false-positive secret detection. 0.0.6 - Stable large-area processing: buffered AOI queries are split into smaller WFS tiles, sheet results are deduplicated, WFS idle timeout is 180 s, source downloads allow up to 600 s of inactivity and 6 attempts, the final-raster safety limit is 1 billion cells, and large mosaics use a working directory next to the destination file. 0.0.5 - Mixed-resolution handling, NMPT 0.5/1 m support and source-product validation.
